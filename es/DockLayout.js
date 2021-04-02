@@ -11,8 +11,8 @@ var __rest = (this && this.__rest) || function (s, e) {
 };
 import React from "react";
 import ReactDOM from "react-dom";
-import debounce from 'lodash/debounce';
-import { defaultGroup, DockContextProvider, placeHolderGroup, placeHolderStyle } from "./DockData";
+import debounce from "lodash/debounce";
+import { defaultGroup, DockContextProvider, placeHolderGroup, placeHolderStyle, } from "./DockData";
 import { DockBox } from "./DockBox";
 import { FloatBox } from "./FloatBox";
 import { DockPanel } from "./DockPanel";
@@ -44,8 +44,8 @@ class DockPortalManager extends React.PureComponent {
     getTabCache(id, owner) {
         let cache = this._caches.get(id);
         if (!cache) {
-            let div = document.createElement('div');
-            div.className = 'dock-pane-cache';
+            let div = document.createElement("div");
+            div.className = "dock-pane-cache";
             cache = { div, id, owner };
             this._caches.set(id, cache);
         }
@@ -96,7 +96,7 @@ export class DockLayout extends DockPortalManager {
                 let newLayout = Algorithm.fixFloatPanelPos(layout, this._ref.offsetWidth, this._ref.offsetHeight);
                 if (layout !== newLayout) {
                     newLayout = Algorithm.fixLayoutData(newLayout); // panel parent might need a fix
-                    this.changeLayout(newLayout, null, 'move');
+                    this.changeLayout(newLayout, null, "move");
                 }
             }
         }, 200);
@@ -106,7 +106,7 @@ export class DockLayout extends DockPortalManager {
             preparedLayout = this.prepareInitData(props.defaultLayout);
         }
         else if (!loadTab) {
-            throw new Error('DockLayout.loadTab and DockLayout.defaultLayout should not both be undefined.');
+            throw new Error("DockLayout.loadTab and DockLayout.defaultLayout should not both be undefined.");
         }
         if (layout) {
             // controlled layout
@@ -122,7 +122,7 @@ export class DockLayout extends DockPortalManager {
             };
         }
         DragManager.addDragStateListener(this.onDragStateChange);
-        window.addEventListener('resize', this._onWindowResize);
+        window.addEventListener("resize", this._onWindowResize);
     }
     /** @ignore */
     getRootElement() {
@@ -159,22 +159,22 @@ export class DockLayout extends DockPortalManager {
      */
     dockMove(source, target, direction) {
         let layout = this.getLayout();
-        if (direction === 'maximize') {
+        if (direction === "maximize") {
             layout = Algorithm.maximize(layout, source);
         }
-        else if (direction === 'front') {
+        else if (direction === "front") {
             layout = Algorithm.moveToFront(layout, source);
         }
         else {
             layout = Algorithm.removeFromLayout(layout, source);
         }
-        if (typeof target === 'string') {
+        if (typeof target === "string") {
             target = this.find(target);
         }
         else {
             target = Algorithm.getUpdatedObject(target); // target might change during removeTab
         }
-        if (direction === 'float') {
+        if (direction === "float") {
             let newPanel = Algorithm.converToPanel(source);
             newPanel.z = Algorithm.nextZIndex(null);
             if (this.state.dropRect) {
@@ -187,14 +187,14 @@ export class DockLayout extends DockPortalManager {
                 }
             }
         }
-        else if (direction === 'new-window') {
+        else if (direction === "new-window") {
             let newPanel = Algorithm.converToPanel(source);
             layout = Algorithm.panelToWindow(layout, newPanel);
         }
         else if (target) {
-            if ('tabs' in target) {
+            if ("tabs" in target) {
                 // pandel target
-                if (direction === 'middle') {
+                if (direction === "middle") {
                     layout = Algorithm.addTabToPanel(layout, source, target);
                 }
                 else {
@@ -202,7 +202,7 @@ export class DockLayout extends DockPortalManager {
                     layout = Algorithm.dockPanelToPanel(layout, newPanel, target, direction);
                 }
             }
-            else if ('children' in target) {
+            else if ("children" in target) {
                 // box target
                 let newPanel = Algorithm.converToPanel(source);
                 layout = Algorithm.dockPanelToBox(layout, newPanel, target, direction);
@@ -215,7 +215,7 @@ export class DockLayout extends DockPortalManager {
         if (layout !== this.getLayout()) {
             layout = Algorithm.fixLayoutData(layout);
             let currentTabId = null;
-            if (source.hasOwnProperty('tabs')) {
+            if (source.hasOwnProperty("tabs")) {
                 currentTabId = source.activeId;
             }
             else {
@@ -240,12 +240,12 @@ export class DockLayout extends DockPortalManager {
     /** @inheritDoc */
     updateTab(id, newTab) {
         let tab = this.find(id, Algorithm.Filter.AnyTab);
-        if (tab && !('tabs' in tab)) {
+        if (tab && !("tabs" in tab)) {
             let panelData = tab.parent;
             let idx = panelData.tabs.indexOf(tab);
             if (idx >= 0) {
                 let { loadTab } = this.props;
-                if (loadTab && !('content' in newTab && 'title' in newTab)) {
+                if (loadTab && !("content" in newTab && "title" in newTab)) {
                     newTab = loadTab(newTab);
                 }
                 let layout = this.getLayout();
@@ -253,7 +253,7 @@ export class DockLayout extends DockPortalManager {
                 panelData = Algorithm.getUpdatedObject(panelData); // panelData might change during removeTab
                 layout = Algorithm.addTabToPanel(layout, newTab, panelData, idx); // add new tab
                 layout = Algorithm.fixLayoutData(layout);
-                this.changeLayout(layout, newTab.id, 'update');
+                this.changeLayout(layout, newTab.id, "update");
                 return true;
             }
         }
@@ -261,19 +261,19 @@ export class DockLayout extends DockPortalManager {
     }
     /** @ignore */
     useEdgeDrop() {
-        return this.props.dropMode === 'edge';
+        return this.props.dropMode === "edge";
     }
     /** @ignore */
     setDropRect(element, direction, source, event, panelSize = [300, 300]) {
         let { dropRect } = this.state;
         if (dropRect) {
-            if (direction === 'remove') {
+            if (direction === "remove") {
                 if (dropRect.source === source) {
                     this.setState({ dropRect: null });
                 }
                 return;
             }
-            else if (dropRect.element === element && dropRect.direction === direction && direction !== 'float') {
+            else if (dropRect.element === element && dropRect.direction === direction && direction !== "float") {
                 // skip duplicated update except for float dragging
                 return;
             }
@@ -291,11 +291,11 @@ export class DockLayout extends DockPortalManager {
         let width = elemRect.width * scaleX;
         let height = elemRect.height * scaleY;
         let ratio = 0.5;
-        if (element.classList.contains('dock-box')) {
+        if (element.classList.contains("dock-box")) {
             ratio = 0.3;
         }
         switch (direction) {
-            case 'float': {
+            case "float": {
                 let x = (event.clientX - layoutRect.left) * scaleX;
                 let y = (event.clientY - layoutRect.top) * scaleY;
                 top = y - 15;
@@ -304,21 +304,21 @@ export class DockLayout extends DockPortalManager {
                 left = x - (width >> 1);
                 break;
             }
-            case 'right':
+            case "right":
                 left += width * (1 - ratio);
-            case 'left': // tslint:disable-line no-switch-case-fall-through
+            case "left": // tslint:disable-line no-switch-case-fall-through
                 width *= ratio;
                 break;
-            case 'bottom':
+            case "bottom":
                 top += height * (1 - ratio);
-            case 'top': // tslint:disable-line no-switch-case-fall-through
+            case "top": // tslint:disable-line no-switch-case-fall-through
                 height *= ratio;
                 break;
-            case 'after-tab':
+            case "after-tab":
                 left += width - 15;
-                width = 30;
+                width = 300;
                 break;
-            case 'before-tab':
+            case "before-tab":
                 left -= 15;
                 width = 30;
                 break;
@@ -334,15 +334,15 @@ export class DockLayout extends DockPortalManager {
         let dropRectStyle;
         if (dropRect) {
             let { element, direction } = dropRect, rect = __rest(dropRect, ["element", "direction"]);
-            dropRectStyle = Object.assign(Object.assign({}, rect), { display: 'block' });
-            if (direction === 'float') {
-                dropRectStyle.transition = 'none';
+            dropRectStyle = Object.assign(Object.assign({}, rect), { display: "block" });
+            if (direction === "float") {
+                dropRectStyle.transition = "none";
             }
         }
         let maximize;
         // if (layout.maxbox && layout.maxbox.children.length === 1) {
         if (maximizeTo) {
-            if (typeof maximizeTo === 'string') {
+            if (typeof maximizeTo === "string") {
                 maximizeTo = document.getElementById(maximizeTo);
             }
             maximize = ReactDOM.createPortal(React.createElement(MaxBox, { boxData: layout.maxbox }), maximizeTo);
@@ -357,18 +357,18 @@ export class DockLayout extends DockPortalManager {
                 portals.push(cache.portal);
             }
         }
-        return (React.createElement("div", { ref: this.getRef, className: 'dock-layout', style: style },
+        return (React.createElement("div", { ref: this.getRef, className: "dock-layout", style: style },
             React.createElement(DockContextProvider, { value: this },
                 React.createElement(DockBox, { size: 1, boxData: layout.dockbox }),
                 React.createElement(FloatBox, { boxData: layout.floatbox }),
                 React.createElement(WindowBox, { boxData: layout.windowbox }),
                 maximize,
                 portals),
-            React.createElement("div", { className: 'dock-drop-indicator', style: dropRectStyle })));
+            React.createElement("div", { className: "dock-drop-indicator", style: dropRectStyle })));
     }
     /** @ignore */
     componentWillUnmount() {
-        window.removeEventListener('resize', this._onWindowResize);
+        window.removeEventListener("resize", this._onWindowResize);
         DragManager.removeDragStateListener(this.onDragStateChange);
         this._onWindowResize.cancel();
     }

@@ -34,7 +34,7 @@ export interface LayoutProps {
      * - edge mode: using the distance between mouse and panel border to pick drop area
      *   - in edge mode, dragging float panel's header won't bring panel back to dock layer
      */
-    dropMode?: 'default' | 'edge';
+    dropMode?: "default" | "edge";
     /**
      * override the default saveTab behavior
      * @return must at least have an unique id
